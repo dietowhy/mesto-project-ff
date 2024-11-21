@@ -1,17 +1,3 @@
-import { openPopup, closePopup} from "./modal";
-import {
-
-    imgPopup,
-    popupImg,
-    popupImgDescr,
-    placeList,
-    addPopupForm,
-    cardName,
-    cardLink,
-    addPopup
-    
-} from './constants'
-
 function addCard(cardElement, deleteCard, openImagePopup, cardLike){   
     const cardTemplate = document.querySelector('#card-template').content;
     const cardTemplateCopy = cardTemplate.querySelector('.card').cloneNode(true);
@@ -35,40 +21,12 @@ function addCard(cardElement, deleteCard, openImagePopup, cardLike){
     return cardTemplateCopy;
 };
 
-function addMyCard (evt){
-    evt.preventDefault();
-    
-    const cardObj = {
-        name: cardName.value,
-        link: cardLink.value,
-    }
-
-    const myCard = addCard(cardObj, deleteCard, openImagePopup, cardLike);
-    placeList.prepend(myCard);
-    closePopup(addPopup);
-    evt.target.reset();
-}
-
 function deleteCard(card) {
     card.remove();
 };
-
-function renderCards (cardArr){    
-    cardArr.forEach(card => {
-        placeList.append(addCard(card, deleteCard, openImagePopup, cardLike))
-    });
-};
-
-function openImagePopup(title, src, alt){
-    popupImg.src = src;
-    popupImg.alt = alt;
-    popupImgDescr.textContent = title;
-  
-    openPopup(imgPopup);
-}
 
 function cardLike(evt){
     evt.target.classList.toggle('card__like-button_is-active');
 }
 
-export {renderCards, addMyCard};
+export {addCard, deleteCard, cardLike};

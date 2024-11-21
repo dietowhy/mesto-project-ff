@@ -2,7 +2,7 @@ import '../styles/index.css';
 import initialCards from "./cards";
 import './imageAssets'
 import { openPopup, closePopup, popupAnimation} from './modal';
-import {renderCards, addMyCard} from './card'
+import {addCard, deleteCard, cardLike} from './card'
 import{
 
     editPopup,
@@ -15,11 +15,41 @@ import{
     jobInput,
     profileDescr,
     closePopupButtons,
-    popups
+    popups,
+    imgPopup,
+    popupImg,
+    popupImgDescr,
+    placeList,
+    cardName,
+    cardLink
     
 } from './constants'
 
-function handleFormSubmit(evt){
+function openImagePopup(title, src, alt){
+    popupImg.src = src;
+    popupImg.alt = alt;
+    popupImgDescr.textContent = title;
+  
+    openPopup(imgPopup);
+}
+
+function addMyCard (evt){
+    evt.preventDefault();
+    
+    const cardObj = {
+        name: cardName.value,
+        link: cardLink.value,
+    }
+
+    const myCard = addCard(cardObj, deleteCard, openImagePopup, cardLike);
+    placeList.prepend(myCard);
+    closePopup(addPopup);
+    evt.target.reset();
+}
+
+addPopup.addEventListener('submit', addMyCard);
+
+function editFormSubmit(evt){
     evt.preventDefault();
 
     const nameInputValue = nameInput.value;
@@ -31,7 +61,7 @@ function handleFormSubmit(evt){
     closePopup(editPopup);
 }
 
-formEdit.addEventListener('submit', handleFormSubmit); 
+formEdit.addEventListener('submit', editFormSubmit); 
 
 editButton.addEventListener('click', () => {
     nameInput.value = profileName.textContent;
@@ -46,7 +76,11 @@ closePopupButtons.forEach(button => {
     button.addEventListener('click', () => closePopup(popup));
 });
 
-addPopup.addEventListener('submit', addMyCard); 
+function renderCards (cardArr){    
+    cardArr.forEach(card => {
+        placeList.append(addCard(card, deleteCard, openImagePopup, cardLike))
+    });
+};
 
 popupAnimation(popups)
   
