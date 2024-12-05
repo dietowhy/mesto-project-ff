@@ -1,8 +1,10 @@
 import '../styles/index.css';
 import initialCards from "./cards";
+import {enableValidation, clearValidation} from "./validation"
 import './imageAssets'
 import { openPopup, closePopup, popupAnimation} from './modal';
 import {addCard, deleteCard, cardLike} from './card'
+import {getUserInfo, getInitialCards, updateUserInfo, addNewCard, deleteCardById, cardLikeServer, updateUserAvatar} from './api'
 import{
 
     editPopup,
@@ -21,9 +23,15 @@ import{
     popupImgDescr,
     placeList,
     cardName,
-    cardLink
+    cardLink,
+    validationConfig,
+    addNewAvatarPopup,
+    profileImage,
+    editAvatarForm,
     
 } from './constants'
+
+enableValidation(validationConfig)
 
 function openImagePopup(title, src, alt){
     popupImg.src = src;
@@ -33,57 +41,121 @@ function openImagePopup(title, src, alt){
     openPopup(imgPopup);
 }
 
-function addMyCard (evt){
+profileImage.addEventListener('click', () => {
+    openPopup(addNewAvatarPopup);
+    clearValidation(editAvatarForm, validationConfig);
+});
+
+function editAvatarFormSubmit(evt) {
     evt.preventDefault();
-    
+  
+    const submitButton = editAvatarForm.querySelector('.popup__button');
+    const originalButtonText = submitButton.textContent;
+    submitButton.textContent = 'Сохранение...';
+  
+    const avatarInput = editAvatarForm.querySelector("#new-ava");
+    const newAvatarUrl = avatarInput.value;
+  
+    updateUserAvatar(newAvatarUrl)
+      .then(data => {
+        profileImage.style.backgroundImage = `url(${data.avatar})`;
+    })
+      .catch(err => {
+        console.error('Ошибка обновления:', err);
+    })
+    .finally(() => {
+        submitButton.textContent = originalButtonText;
+        closePopup(addNewAvatarPopup);
+    })
+}
+
+editAvatarForm.addEventListener("submit", editAvatarFormSubmit);
+
+function editProfileFromSubmit(evt){
+    evt.preventDefault();
+
+    const submitButton = formEdit.querySelector('.popup__button');
+    const originalButtonText = submitButton.textContent;
+    submitButton.textContent = 'Сохранение...';
+
+    const nameInputValue = nameInput.value;
+    const jobInputValue = jobInput.value;
+
+    updateUserInfo(nameInputValue, jobInputValue)
+        .then(data => {
+            profileName.textContent = data.name;
+            profileDescription.textContent = data.about;
+        })
+        .catch(err => {
+            console.error('Ошибка при обновлении профиля:', err);
+        })
+        .finally(() => {
+            submitButton.textContent = originalButtonText;
+            closePopup(editPopup);
+        });
+}
+
+formEdit.addEventListener('submit', editProfileFromSubmit); 
+
+function addMyCardSubmit (evt){
+    evt.preventDefault();
+
+    const submitButton = addPopup.querySelector('.popup__button');
+    const originalButtonText = submitButton.textContent;
+    submitButton.textContent = 'Сохранение...';
+
     const cardObj = {
         name: cardName.value,
         link: cardLink.value,
     }
 
-    const myCard = addCard(cardObj, deleteCard, openImagePopup, cardLike);
-    placeList.prepend(myCard);
-    closePopup(addPopup);
-    evt.target.reset();
+    addNewCard(cardObj)
+        .then(data => {
+            placeList.prepend(addCard(data, deleteCard, openImagePopup, cardLike, userId));
+            addPopup.reset()
+        })
+        .catch(err => {
+            console.error('Ошибка при обновлении профиля:', err);
+        })
+        .finally(() => {
+            submitButton.textContent = originalButtonText;
+            closePopup(addPopup);
+        });
 }
 
-addPopup.addEventListener('submit', addMyCard);
-
-function editFormSubmit(evt){
-    evt.preventDefault();
-
-    const nameInputValue = nameInput.value;
-    const jobInputValue = jobInput.value;
-
-    profileName.textContent = nameInputValue;
-    profileDescr.textContent = jobInputValue;
-
-    closePopup(editPopup);
-}
-
-formEdit.addEventListener('submit', editFormSubmit); 
+addPopup.addEventListener('submit', addMyCardSubmit);
 
 editButton.addEventListener('click', () => {
-    nameInput.value = profileName.textContent;
-    jobInput.value = profileDescr.textContent;
     openPopup(editPopup);
+    clearValidation(editPopup, validationConfig)
+    nameInput.value = profileName.textContent;
+    jobInput.value = profileDescr.textContent; 
 });
 
-addButton.addEventListener('click', () => openPopup(addPopup));
-
+addButton.addEventListener('click', () => {
+    openPopup(addPopup);
+    clearValidation(addPopup, validationConfig)
+})
 closePopupButtons.forEach(button => {
     const popup = button.closest('.popup');
     button.addEventListener('click', () => closePopup(popup));
 });
 
-function renderCards (cardArr){    
-    cardArr.forEach(card => {
-        placeList.append(addCard(card, deleteCard, openImagePopup, cardLike))
+let userId
+
+Promise.all([getUserInfo(), getInitialCards()])
+  .then(([userData, cardsData]) => {
+    profileName.textContent = userData.name;
+    profileDescr.textContent = userData.about;
+    userId = userData._id;
+
+    cardsData.forEach(card => {
+      placeList.append(addCard(card, deleteCard, openImagePopup, cardLike, userId));
     });
-};
+})
+.catch(err => console.error(err));
 
 popupAnimation(popups)
   
-renderCards(initialCards);
 
 

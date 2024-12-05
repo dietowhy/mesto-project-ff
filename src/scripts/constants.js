@@ -4,6 +4,9 @@ export const addPopup = document.querySelector('.popup_type_new-card')
 export const imgPopup = document.querySelector('.popup_type_image');
 export const popupImg = imgPopup.querySelector('.popup__image');
 export const popupImgDescr = imgPopup.querySelector('.popup__caption');
+export const addNewAvatarPopup = document.querySelector('.popup_type-new-ava');
+export const profileImage = document.querySelector('.profile__image');
+export const editAvatarForm = document.querySelector(".popup_type-new-ava .popup__form");
 export const addPopupForm = document.forms['new-place'];
 export const cardName = addPopupForm.elements['place-name'];
 export const cardLink = addPopupForm.elements['link'];
@@ -19,6 +22,15 @@ export const nameInput = formEdit.elements.name;
 export const jobInput = formEdit.elements.description;
 
 export const placeList = document.querySelector('.places__list');
+
+export const validationConfig = {
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__button',
+    inactiveButtonClass: 'popup__button_disabled',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'popup__error_visible'
+};
 
 
 
