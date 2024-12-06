@@ -20,6 +20,9 @@ export const profileDescr = document.querySelector('.profile__description');
 export const formEdit = document.forms['edit-profile'];
 export const nameInput = formEdit.elements.name;
 export const jobInput = formEdit.elements.description;
+export const avatarSubmitButton = editAvatarForm.querySelector('.popup__button');
+export const profileSubmitButton = formEdit.querySelector('.popup__button');
+export const addMyCardSubmitButton = formEdit.querySelector('.popup__button'); 
 
 export const placeList = document.querySelector('.places__list');
 

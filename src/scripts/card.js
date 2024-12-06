@@ -8,11 +8,10 @@ function addCard(cardElement, deleteCard, openImagePopup, cardLike, userId){
     const likeCounter = cardTemplateCopy.querySelector('.card__like-count')
 
     const cardImage = cardTemplateCopy.querySelector('.card__image');
-    const cardAlt = cardTemplateCopy.querySelector('.card__image');
     const cardTitle = cardTemplateCopy.querySelector('.card__title');
 
     cardImage.src = cardElement.link;
-    cardAlt.alt = cardElement.name;
+    cardImage.alt = cardElement.name;
     cardTitle.textContent = cardElement.name;
     likeCounter.textContent = cardElement.likes.length;
 
@@ -28,7 +27,7 @@ function addCard(cardElement, deleteCard, openImagePopup, cardLike, userId){
     }
 
     cardLikeButton.addEventListener('click', () => cardLike(cardLikeButton, likeCounter, cardElement._id))
-    cardImage.addEventListener('click', () => openImagePopup(cardTitle.textContent, cardImage.src, cardAlt.alt))
+    cardImage.addEventListener('click', () => openImagePopup(cardTitle.textContent, cardImage.src, cardImage.alt))
 
     return cardTemplateCopy;
 };

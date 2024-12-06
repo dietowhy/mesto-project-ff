@@ -4,7 +4,7 @@ import {enableValidation, clearValidation} from "./validation"
 import './imageAssets'
 import { openPopup, closePopup, popupAnimation} from './modal';
 import {addCard, deleteCard, cardLike} from './card'
-import {getUserInfo, getInitialCards, updateUserInfo, addNewCard, deleteCardById, cardLikeServer, updateUserAvatar} from './api'
+import {getUserInfo, getInitialCards, updateUserInfo, addNewCard, updateUserAvatar} from './api'
 import{
 
     editPopup,
@@ -28,6 +28,9 @@ import{
     addNewAvatarPopup,
     profileImage,
     editAvatarForm,
+    avatarSubmitButton,
+    profileSubmitButton,
+    addMyCardSubmitButton
     
 } from './constants'
 
@@ -49,9 +52,8 @@ profileImage.addEventListener('click', () => {
 function editAvatarFormSubmit(evt) {
     evt.preventDefault();
   
-    const submitButton = editAvatarForm.querySelector('.popup__button');
-    const originalButtonText = submitButton.textContent;
-    submitButton.textContent = 'Сохранение...';
+    const originalButtonText = avatarSubmitButton.textContent;
+    avatarSubmitButton.textContent = 'Сохранение...';
   
     const avatarInput = editAvatarForm.querySelector("#new-ava");
     const newAvatarUrl = avatarInput.value;
@@ -64,7 +66,7 @@ function editAvatarFormSubmit(evt) {
         console.error('Ошибка обновления:', err);
     })
     .finally(() => {
-        submitButton.textContent = originalButtonText;
+        avatarSubmitButton.textContent = originalButtonText;
         closePopup(addNewAvatarPopup);
     })
 }
@@ -74,9 +76,8 @@ editAvatarForm.addEventListener("submit", editAvatarFormSubmit);
 function editProfileFromSubmit(evt){
     evt.preventDefault();
 
-    const submitButton = formEdit.querySelector('.popup__button');
-    const originalButtonText = submitButton.textContent;
-    submitButton.textContent = 'Сохранение...';
+    const originalButtonText = profileSubmitButton.textContent;
+    profileSubmitButton.textContent = 'Сохранение...';
 
     const nameInputValue = nameInput.value;
     const jobInputValue = jobInput.value;
@@ -90,7 +91,7 @@ function editProfileFromSubmit(evt){
             console.error('Ошибка при обновлении профиля:', err);
         })
         .finally(() => {
-            submitButton.textContent = originalButtonText;
+            profileSubmitButton.textContent = originalButtonText;
             closePopup(editPopup);
         });
 }
@@ -100,9 +101,8 @@ formEdit.addEventListener('submit', editProfileFromSubmit);
 function addMyCardSubmit (evt){
     evt.preventDefault();
 
-    const submitButton = addPopup.querySelector('.popup__button');
-    const originalButtonText = submitButton.textContent;
-    submitButton.textContent = 'Сохранение...';
+    const originalButtonText = addMyCardSubmitButton.textContent;
+    addMyCardSubmitButton.textContent = 'Сохранение...';
 
     const cardObj = {
         name: cardName.value,
@@ -118,7 +118,7 @@ function addMyCardSubmit (evt){
             console.error('Ошибка при обновлении профиля:', err);
         })
         .finally(() => {
-            submitButton.textContent = originalButtonText;
+            addMyCardSubmitButton.textContent = originalButtonText;
             closePopup(addPopup);
         });
 }
